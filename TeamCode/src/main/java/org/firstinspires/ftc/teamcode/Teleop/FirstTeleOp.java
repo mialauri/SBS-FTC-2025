@@ -18,11 +18,34 @@ public class FirstTeleOp extends LinearOpMode {
 
     public static double IN_CLAW_CLOSE = 0.0;
     public static double IN_CLAW_OPEN = 1.0;
-
+    public static double IN_WRIST_DEPOSIT = 0.0;
+    public static double IN_WRIST_INTAKE = 1.0;
+    public static double OUT_CLAW_CLOSE = 0.0;
+    public static double OUT_CLAW_OPEN = 1.0;
+    public static double OUT_WRIST_SCORE = 0.0;
+    public static double OUT_WRIST_RECIEVE = 1.0;
+    public static double DOWN = 0.0;
+    public static double UP_BAR = 1.0;
+    public static double UP_BASKET = 0.0;
+    public static double INTAKE_SLIDE_FAST = 0.0;
+    public static double INTAKE_SLIDE_SLOW = 0.0;
 
     boolean pressA = false;
+    boolean pressB = false;
+    boolean pressX = false;
+    boolean pressY = false;
+    boolean pressRTRIGGER = false;
+    boolean pressLTRIGGER = false;
+    boolean pressRBUMPER = false;
+    boolean pressLBUMBPER = false;
+    boolean pressDPADUP = false;
+    boolean pressDPADDOWN = false;
+    boolean pressDPADRIGHT = false;
+    boolean pressDPADLEFT = false;
 
-
+    private enum VertArmStatus {
+        DOWN, UP_BAR, UP_BASKET
+    }
     boolean InClawOpen = true;
     boolean hasSample = false;
 
@@ -56,6 +79,51 @@ public class FirstTeleOp extends LinearOpMode {
             else if (!gamepad1.a && pressA) {
                 pressA = false;
             }
+
+
+            if (gamepad1.a && !pressA) {
+                pressA = true;
+            }
+            else if (!gamepad1.a && pressA) {
+                pressA = false;
+            }
+
+
+
+            if (gamepad1.b && !pressB && !hasSample) {
+                pressB = true;
+                if(inClaw.getPosition() == IN_CLAW_CLOSE){
+                    inClaw.setPosition(IN_CLAW_OPEN);
+                } else if (inClaw.getPosition() == IN_CLAW_OPEN) {
+                    inClaw.setPosition(IN_CLAW_CLOSE);
+                }
+            }
+            else if (!gamepad1.b && pressB) {
+                pressB = false;
+            }
+
+            if (gamepad1.b && !pressB && hasSample) {
+                pressB = true;
+            }
+            else if (!gamepad1.b && pressB) {
+                pressB = false;
+            }
+
+            if (gamepad1.a && !pressA) {
+                pressA = true;
+            }
+            else if (!gamepad1.a && pressA) {
+                pressA = false;
+            }
+
+
+            if (gamepad1.a && !pressA) {
+                pressA = true;
+            }
+            else if (!gamepad1.a && pressA) {
+                pressA = false;
+            }
+
         }
     }
 
