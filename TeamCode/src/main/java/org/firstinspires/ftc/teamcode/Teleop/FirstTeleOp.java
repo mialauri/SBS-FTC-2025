@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Arm.SlideVerticalArm;
 import org.firstinspires.ftc.teamcode.Arm.TubeDriver;
+import org.firstinspires.ftc.teamcode.Utils.AdvancedPidController;
 
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(group = "Teleop")
@@ -215,7 +216,7 @@ public class FirstTeleOp extends LinearOpMode {
     public double getArmPower() {
         double pos = intake.getCurrentPosition();
         double angle_deg = (360 / 751.8) * pos; //TODO CHECK TICKS PER REV ON MOTOR
-        return pidController.calculate(angle_deg, TARGET_INCHES);
+        return AdvancedPidController.calculate(angle_deg, TARGET_INCHES);
     }
 
     public void initializeEverything() {
