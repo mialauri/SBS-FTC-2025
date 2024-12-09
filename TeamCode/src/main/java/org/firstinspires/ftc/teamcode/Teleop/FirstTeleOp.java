@@ -15,6 +15,7 @@ public class FirstTeleOp extends LinearOpMode {
     ColorSensor transColor, inColor;
     IMU imu;
 
+    arm
     public static double IN_CLAW_CLOSE = 0.0;
     public static double IN_CLAW_OPEN = 1.0;
     public static double IN_WRIST_DEPOSIT = 0.0;
@@ -42,13 +43,12 @@ public class FirstTeleOp extends LinearOpMode {
     boolean pressDPADRIGHT = false;
     boolean pressDPADLEFT = false;
 
+    VertArmStatus vertArmStatus = VertArmStatus.DOWN;
     private enum VertArmStatus {
         DOWN, UP_BAR, UP_BASKET
     }
     boolean InClawOpen = true;
     boolean hasSample = false;
-    public static double CLAW_CLOSE = 0.0;
-    public static double CLAW_OPEN = 1.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -66,89 +66,115 @@ public class FirstTeleOp extends LinearOpMode {
         transfer = hardwareMap.get(Servo.class, "transfer");
         imu      = hardwareMap.get(IMU.class, "imu");
 
-        boolean isPressingStart = false;
-        boolean isPressingBack = false;
-        boolean isPressingLeftStickButton = false;
-        boolean isPressingRightStickButton = false;
-        boolean isPressingLeftBumper = false;
-        boolean isPressingRightBumper = false;
-        boolean isPressingLeftTrigger = false;
-        boolean isPressingRightTrigger = false;
-        boolean isPressingDpadUp = false;
-        boolean isPressingDpadDown = false;
-        boolean isPressingDpadLeft = false;
-        boolean isPressingDpadRight = false;
-        boolean isPressingA = false;
-        boolean isPressingB = false;
-        boolean isPressingX = false;
-        boolean isPressingY = false;
-        boolean hasSample = false;
-
 
 
         waitForStart();
 
         while (opModeIsActive()) {
-
+            telemetry.addData("Has Sample: ", hasSample);
+            telemetry.addData("Arm Status: ", vertArmStatus);
             telemetry.update();
 
-            /*private  void openClaw;() {
-                inClaw.setPosition(CLAW_OPEN);
-                hasSample = false;*/
-            }
-
-            if (gamepad1.a && !pressA) {
-                pressA = true;
-            }
-            else if (!gamepad1.a && pressA) {
-                pressA = false;
-            }
 
 
-
-            if (gamepad1.b && !pressB && !hasSample) {
-                pressB = true;
+            //in claw
+            if (gamepad1.x && !pressX && !hasSample) {
+                pressX = true;
                 if(inClaw.getPosition() == IN_CLAW_CLOSE){
                     inClaw.setPosition(IN_CLAW_OPEN);
                 } else if (inClaw.getPosition() == IN_CLAW_OPEN) {
                     inClaw.setPosition(IN_CLAW_CLOSE);
                 }
             }
+            else if (!gamepad1.x && pressX) {
+                pressX = false;
+            }
+
+            //dep claw
+            if (gamepad1.x && !pressX && hasSample) {
+                pressX = true;
+                if(depClaw.getPosition() == OUT_CLAW_CLOSE){
+                    depClaw.setPosition(OUT_CLAW_OPEN);
+                } else if (depClaw.getPosition() == OUT_CLAW_OPEN) {
+                    depClaw.setPosition(OUT_CLAW_CLOSE);
+                }
+            }
+            else if (!gamepad1.x && pressX) {
+                pressX = false;
+            }
+
+            //in wrist
+            if (gamepad1.b && !pressB && !hasSample) {
+                pressB = true;
+                hasSample = true;
+                if(inWrist.getPosition() == IN_WRIST_DEPOSIT){
+                    inWrist.setPosition(IN_WRIST_INTAKE);
+                } else if (inWrist.getPosition() == IN_WRIST_INTAKE) {
+                    inWrist.setPosition(IN_WRIST_DEPOSIT);
+                }
+            }
             else if (!gamepad1.b && pressB) {
                 pressB = false;
             }
 
+            //dep wrist
             if (gamepad1.b && !pressB && hasSample) {
                 pressB = true;
+                hasSample = false;
+                if(depWrist.getPosition() == OUT_WRIST_SCORE){
+                    depWrist.setPosition(OUT_WRIST_RECIEVE);
+                } else if (depWrist.getPosition() == OUT_WRIST_RECIEVE) {
+                    depWrist.setPosition(OUT_WRIST_SCORE);
+                }
             }
             else if (!gamepad1.b && pressB) {
-                pressB = false;
+                pressX = false;
             }
 
+            //up
+            if (gamepad1.y && !pressY) {
+                pressY = true;
+                switch (vertArmStatus) {
+                    case DOWN:
+                        vertical1.setTargetPosition(UP_BAR);
+                        vertical2.setTargetPosition(UP_BAR);
+                        vertArmStatus = VertArmStatus.UP_BAR;
+                    case UP_BAR:
+                        vertical1.setTargetPosition(UP_BASKET);
+                        vertical2.setTargetPosition(UP_BASKET);
+                        vertArmStatus = VertArmStatus.UP_BASKET;
+                    default:
+                        vertical1.setTargetPosition(DOWN);
+                        vertical2.setTargetPosition(DOWN);
+                        vertArmStatus = VertArmStatus.DOWN;
+                }
+            }
+            else if (!gamepad1.y && pressY) {
+                pressY = false;
+            }
+
+            //down
             if (gamepad1.a && !pressA) {
                 pressA = true;
+                switch (vertArmStatus) {
+                    case UP_BASKET:
+                        vertical1.setTargetPosition(UP_BAR);
+                        vertical2.setTargetPosition(UP_BAR);
+                        vertArmStatus = VertArmStatus.UP_BAR;
+                    case UP_BAR:
+                        vertical1.setTargetPosition(DOWN);
+                        vertical2.setTargetPosition(DOWN);
+                        vertArmStatus = VertArmStatus.DOWN;
+                    default:
+                        vertical1.setTargetPosition(UP_BASKET);
+                        vertical2.setTargetPosition(UP_BASKET);
+                        vertArmStatus = VertArmStatus.UP_BASKET;
+                }
             }
             else if (!gamepad1.a && pressA) {
                 pressA = false;
             }
-
-
-            if (gamepad1.a && !pressA) {
-                pressA = true;
-            }
-            else if (!gamepad1.a && pressA) {
-                pressA = false;
-            }
-
-            private void closeClaw() {
-                inClaw.setPosition(CLAW_CLOSE);
-                hasSample = true;
-            }
-           // private void closeClaw;() {
-               // inClaw.setPosition(CLAW_CLOSE);
-              //  hasSample = true;
-           // }
-
         }
     }
+}
 
