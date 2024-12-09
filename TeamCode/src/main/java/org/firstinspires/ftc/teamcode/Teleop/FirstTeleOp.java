@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Arm.SlideVerticalArm;
+import org.firstinspires.ftc.teamcode.Arm.TubeDriver;
 
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(group = "Teleop")
@@ -15,7 +17,6 @@ public class FirstTeleOp extends LinearOpMode {
     ColorSensor transColor, inColor;
     IMU imu;
 
-    arm
     public static double IN_CLAW_CLOSE = 0.0;
     public static double IN_CLAW_OPEN = 1.0;
     public static double IN_WRIST_DEPOSIT = 0.0;
@@ -43,6 +44,12 @@ public class FirstTeleOp extends LinearOpMode {
     boolean pressDPADRIGHT = false;
     boolean pressDPADLEFT = false;
 
+    public SlideVerticalArm slideVerticalArm;
+
+    public FirstTeleOp(DcMotorEx vertical1, DcMotorEx vertical2) {
+        slideVerticalArm = new SlideVerticalArm(vertical1, vertical2);
+        slideVerticalArm.resetPidValues();
+    }
     VertArmStatus vertArmStatus = VertArmStatus.DOWN;
     private enum VertArmStatus {
         DOWN, UP_BAR, UP_BASKET
@@ -57,8 +64,6 @@ public class FirstTeleOp extends LinearOpMode {
         rb       = hardwareMap.get(DcMotorEx.class, "rb");
         rf       = hardwareMap.get(DcMotorEx.class, "rf");
         intake  = hardwareMap.get(DcMotorEx.class, "intake");
-        vertical1  = hardwareMap.get(DcMotorEx.class, "vertical1");
-        vertical2 = hardwareMap.get(DcMotorEx.class, "vertical2");
         inClaw   = hardwareMap.get(Servo.class, "inClaw");
         depClaw  = hardwareMap.get(Servo.class, "depClaw");
         inWrist  = hardwareMap.get(Servo.class, "inWrist");
@@ -67,6 +72,12 @@ public class FirstTeleOp extends LinearOpMode {
         imu      = hardwareMap.get(IMU.class, "imu");
 
 
+
+        vertical1  = hardwareMap.get(DcMotorEx.class, "vertical1");
+        vertical2 = hardwareMap.get(DcMotorEx.class, "vertical2");
+        TubeDriver.initRotationMotors(vertical1, vertical2);
+
+        slideVerticalArm = new SlideVerticalArm(vertical1, vertical2);
 
         waitForStart();
 
@@ -136,16 +147,13 @@ public class FirstTeleOp extends LinearOpMode {
                 pressY = true;
                 switch (vertArmStatus) {
                     case DOWN:
-                        vertical1.setTargetPosition(UP_BAR);
-                        vertical2.setTargetPosition(UP_BAR);
+                        slideVerticalArm.setToAngleDegrees(UP_BAR);
                         vertArmStatus = VertArmStatus.UP_BAR;
                     case UP_BAR:
-                        vertical1.setTargetPosition(UP_BASKET);
-                        vertical2.setTargetPosition(UP_BASKET);
+                        slideVerticalArm.setToAngleDegrees(UP_BASKET);
                         vertArmStatus = VertArmStatus.UP_BASKET;
                     default:
-                        vertical1.setTargetPosition(DOWN);
-                        vertical2.setTargetPosition(DOWN);
+                        slideVerticalArm.setToAngleDegrees(DOWN);
                         vertArmStatus = VertArmStatus.DOWN;
                 }
             }
@@ -158,16 +166,13 @@ public class FirstTeleOp extends LinearOpMode {
                 pressA = true;
                 switch (vertArmStatus) {
                     case UP_BASKET:
-                        vertical1.setTargetPosition(UP_BAR);
-                        vertical2.setTargetPosition(UP_BAR);
+                        slideVerticalArm.setToAngleDegrees(UP_BAR);
                         vertArmStatus = VertArmStatus.UP_BAR;
                     case UP_BAR:
-                        vertical1.setTargetPosition(DOWN);
-                        vertical2.setTargetPosition(DOWN);
+                        slideVerticalArm.setToAngleDegrees(DOWN);
                         vertArmStatus = VertArmStatus.DOWN;
                     default:
-                        vertical1.setTargetPosition(UP_BASKET);
-                        vertical2.setTargetPosition(UP_BASKET);
+                        slideVerticalArm.setToAngleDegrees(UP_BASKET);
                         vertArmStatus = VertArmStatus.UP_BASKET;
                 }
             }
