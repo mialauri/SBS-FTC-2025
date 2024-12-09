@@ -24,7 +24,7 @@ public class FirstTeleOp extends LinearOpMode {
     public static double OUT_CLAW_CLOSE = 0.0;
     public static double OUT_CLAW_OPEN = 1.0;
     public static double OUT_WRIST_SCORE = 0.0;
-    public static double OUT_WRIST_RECIEVE = 1.0;
+    public static double OUT_WRIST_RECEIVE = 1.0;
     public static double DOWN = 0.0;
     public static double UP_BAR = 1.0;
     public static double UP_BASKET = 0.0;
@@ -70,20 +70,6 @@ public class FirstTeleOp extends LinearOpMode {
         depWrist = hardwareMap.get(Servo.class, "depWrist");
         transfer = hardwareMap.get(Servo.class, "transfer");
         imu      = hardwareMap.get(IMU.class, "imu");
-
-        lb         = hardwareMap.get(DcMotorEx .class, "lb");
-        lf         = hardwareMap.get(DcMotorEx.class, "lf");
-        rb         = hardwareMap.get(DcMotorEx.class, "rb");
-        rf         = hardwareMap.get(DcMotorEx.class, "rf");
-        intake     = hardwareMap.get(DcMotorEx.class, "intake");
-        vertical1  = hardwareMap.get(DcMotorEx.class, "vertical1");
-        vertical2  = hardwareMap.get(DcMotorEx.class, "vertical2");
-        inClaw     = hardwareMap.get(Servo.class, "inClaw");
-        depClaw    = hardwareMap.get(Servo.class, "depClaw");
-        inWrist    = hardwareMap.get(Servo.class, "inWrist");
-        depWrist   = hardwareMap.get(Servo.class, "depWrist");
-        transfer   = hardwareMap.get(Servo.class, "transfer");
-        imu        = hardwareMap.get(IMU.class, "imu");
 
         vertical1  = hardwareMap.get(DcMotorEx.class, "vertical1");
         vertical2 = hardwareMap.get(DcMotorEx.class, "vertical2");
@@ -143,8 +129,8 @@ public class FirstTeleOp extends LinearOpMode {
                 pressB = true;
                 hasSample = false;
                 if(depWrist.getPosition() == OUT_WRIST_SCORE){
-                    depWrist.setPosition(OUT_WRIST_RECIEVE);
-                } else if (depWrist.getPosition() == OUT_WRIST_RECIEVE) {
+                    depWrist.setPosition(OUT_WRIST_RECEIVE);
+                } else if (depWrist.getPosition() == OUT_WRIST_RECEIVE) {
                     depWrist.setPosition(OUT_WRIST_SCORE);
                 }
             }
@@ -193,7 +179,7 @@ public class FirstTeleOp extends LinearOpMode {
             // Intake Slide -->
 
             // In (Right Trigger)
-            if (gamepad1.right_trigger > 1) {
+            if (gamepad1.right_trigger > 1) {//TODO ADD CONDITIONAL WITH MAX INCHES
                 TARGET_INCHES = 0;
                 intake.setPower(getArmPower());
             }
