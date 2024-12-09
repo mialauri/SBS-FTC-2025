@@ -220,6 +220,8 @@ public class FirstTeleOp extends LinearOpMode {
     }
 
     public void initializeEverything() {
-
+        /*
+        TODO MAKE THIS SO IT INITIALIZES ALL MOTORS AND THE IMU, THEN CALL METHOD IN INIT
+        */
     }
 }
