@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.Teleop;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Arm.SlideVerticalArm;
 import org.firstinspires.ftc.teamcode.Arm.TubeDriver;
 import org.firstinspires.ftc.teamcode.Utils.AdvancedPidController;
+import com.acmerobotics.dashboard.config.Config;
 
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(group = "Teleop")
@@ -17,6 +19,7 @@ public class FirstTeleOp extends LinearOpMode {
     Servo inClaw, depClaw, inWrist, depWrist, transfer;
     ColorSensor transColor, inColor;
     IMU imu;
+    ChassisDriver chassisDriver;
     public static double IN_CLAW_CLOSE = 0.0;
     public static double IN_CLAW_OPEN = 1.0;
     public static double IN_WRIST_DEPOSIT = 0.0;
@@ -30,19 +33,24 @@ public class FirstTeleOp extends LinearOpMode {
     public static double UP_BASKET = 0.0;
     public static double INTAKE_POWER = 0.0;
     public static double TARGET_INCHES = 0.0;
+    public static double FAST_SPEED_MULTIPLIER = 2;
+    public static double FAST_TURN_MULTIPLIER = 4;
+    public static double SLOW_SPEED_MULTIPLIER = 0.8;
+    public static double SLOW_TURN_MULTIPLIER = 1.5;
+    public static double FORWARD_SCALAR = 1;
 
     boolean pressA = false;
     boolean pressB = false;
     boolean pressX = false;
     boolean pressY = false;
-    boolean pressRTRIGGER = false;
-    boolean pressLTRIGGER = false;
     boolean pressRBUMPER = false;
     boolean pressLBUMBPER = false;
     boolean pressDPADUP = false;
     boolean pressDPADDOWN = false;
     boolean pressDPADRIGHT = false;
     boolean pressDPADLEFT = false;
+    boolean pressRTRIGGER = false;
+    boolean pressLTRIGGER = false;
 
     public SlideVerticalArm slideVerticalArm;
 
@@ -56,6 +64,7 @@ public class FirstTeleOp extends LinearOpMode {
     }
     boolean InClawOpen = true;
     boolean hasSample = false;
+    boolean isFastSpeedMode = true;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -63,6 +72,8 @@ public class FirstTeleOp extends LinearOpMode {
         lf       = hardwareMap.get(DcMotorEx.class, "lf");
         rb       = hardwareMap.get(DcMotorEx.class, "rb");
         rf       = hardwareMap.get(DcMotorEx.class, "rf");
+        ChassisDriver.initializeMotors(lf, rf, lb, rb);
+
         intake  = hardwareMap.get(DcMotorEx.class, "intake");
         inClaw   = hardwareMap.get(Servo.class, "inClaw");
         depClaw  = hardwareMap.get(Servo.class, "depClaw");
@@ -77,12 +88,18 @@ public class FirstTeleOp extends LinearOpMode {
 
         slideVerticalArm = new SlideVerticalArm(vertical1, vertical2);
 
+        chassisDriver = new ChassisDriver(imu);
+
         waitForStart();
 
         while (opModeIsActive()) {
             telemetry.addData("Has Sample: ", hasSample);
             telemetry.addData("Arm Status: ", vertArmStatus);
             telemetry.update();
+
+            simpleDrive();
+
+
 
             //in claw
             if (gamepad1.x && !pressX && !hasSample) {
@@ -213,4 +230,38 @@ public class FirstTeleOp extends LinearOpMode {
         TODO MAKE THIS SO IT INITIALIZES ALL MOTORS AND THE IMU, THEN CALL METHOD IN INIT
         */
     }
+
+    private void simpleDrive() {
+        double gamePadForward, gamePadLeft, gamePadTurn;
+        gamePadForward = -gamepad1.left_stick_y;
+        gamePadLeft = -gamepad1.left_stick_x;
+        gamePadTurn = -gamepad1.right_stick_x;
+
+        Pose2d adjustedGamePadInputs = adjustGamePadInputs(
+                new Pose2d(gamePadForward, gamePadLeft, gamePadTurn)
+        );
+        gamePadForward = adjustedGamePadInputs.getX();
+        gamePadLeft = adjustedGamePadInputs.getY();
+        gamePadTurn = adjustedGamePadInputs.getHeading();
+
+        if (isFastSpeedMode) {
+            setNormalizedDrive(
+                    new Pose2d(
+                            gamePadForward * FAST_SPEED_MULTIPLIER * FORWARD_SCALAR,
+                            gamePadLeft * FAST_SPEED_MULTIPLIER,
+                            gamePadTurn * FAST_TURN_MULTIPLIER
+                    )
+            );
+        } else {
+            setNormalizedDrive(
+                    new Pose2d(gamePadForward * SLOW_SPEED_MULTIPLIER * FORWARD_SCALAR,
+                            gamePadLeft * SLOW_SPEED_MULTIPLIER,
+                            gamePadTurn * SLOW_TURN_MULTIPLIER
+                    )
+            );
+        }
+    }
+
+
+
 }
