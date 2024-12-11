@@ -215,9 +215,11 @@ public class FirstTeleOp extends LinearOpMode {
             }
 
             //Chassis Drive
+            double forwardPower = -gamepad1.left_stick_y;
+            double leftPower = -gamepad1.left_stick_x;
+            double rotatePower = -gamepad1.right_stick_x;
 
-
-
+            chassisDriver.setNormalizedDrive(new Pose2d(forwardPower, leftPower, rotatePower));
         }
     }
     public double getArmPower() {
