@@ -45,10 +45,10 @@ public class ChassisDriver {
     public static double rotationPowerLimit = 1.5;
     AdvancedPidController rotationPid = new AdvancedPidController(rotationP, rotationI, rotationD, rotationMaxIOutput, "Rotation Pid");
 
-    public static double TRACK_SPEED_MULTIPLIER = 2;
-    public static double TRACK_TURN_MULTIPLIER = 4;
-    public static double COMFORT_SPEED_MULTIPLIER = 0.8;
-    public static double COMFORT_TURN_MULTIPLIER = 1.5;
+    public static double FAST_SPEED_MULTIPLIER = 2;
+    public static double FAST_TURN_MULTIPLIER = 4;
+    public static double SLOW_SPEED_MULTIPLIER = 0.8;
+    public static double SLOW_TURN_MULTIPLIER = 1.5;
 
     private final static Translation2d lfLocation = new Translation2d(0.095, 0.096);
     private final static Translation2d rfLocation = new Translation2d(0.095, -0.096);
