@@ -66,7 +66,7 @@ public class FirstTeleOp extends LinearOpMode {
     boolean InClawOpen = true;
     boolean hasSample = false;
     boolean isFastSpeedMode = true;
-
+    boolean isFastIntakeMode = true;
     @Override
     public void runOpMode() throws InterruptedException {
         lb = hardwareMap.get(DcMotorEx.class, "lb");
@@ -189,8 +189,21 @@ public class FirstTeleOp extends LinearOpMode {
 
             // Intake Slide -->
 
+            if (gamepad1.right_bumper && !pressRBUMPER && !isFastIntakeMode) {
+                pressRBUMPER = true;
+                isFastIntakeMode = true;
+            } else if (gamepad1.right_bumper && !pressRBUMPER && isFastIntakeMode) {
+                pressRBUMPER = true;
+                isFastIntakeMode = false;
+            } else if (!gamepad1.right_bumper && pressRBUMPER) {
+                pressRBUMPER = false;
+            }
+
             // In (Right Trigger)
-            if (gamepad1.right_trigger > 1) {//TODO ADD CONDITIONAL WITH MAX INCHES
+            if (gamepad1.right_trigger > 0.9 && isFastIntakeMode) {//TODO ADD CONDITIONAL WITH MAX INCHES
+                TARGET_INCHES = 0;
+                intake.setPower(getArmPower());
+            } else if (gamepad1.right_trigger > 0.9 && !isFastIntakeMode) {//TODO ADD CONDITIONAL WITH MAX INCHES
                 TARGET_INCHES = 0;
                 intake.setPower(getArmPower());
             } else {
@@ -198,7 +211,10 @@ public class FirstTeleOp extends LinearOpMode {
             }
 
             // Out (Left Trigger)
-            if (gamepad1.left_trigger > 1) {
+            if (gamepad1.left_trigger > 0.9 && isFastIntakeMode) {
+                TARGET_INCHES = 12; //TODO CHECK WHAT THE MAX REACH IS IN INCHES
+                intake.setPower(getArmPower());
+            } else if (gamepad1.left_trigger > 0.9 && !isFastIntakeMode) {
                 TARGET_INCHES = 12; //TODO CHECK WHAT THE MAX REACH IS IN INCHES
                 intake.setPower(getArmPower());
             } else {
