@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.Arm.TubeDriver;
 import org.firstinspires.ftc.teamcode.Utils.AdvancedPidController;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import org.firstinspires.ftc.teamcode.Utils.Chassis.ChassisDriver;
 
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(group = "Teleop")
@@ -230,38 +231,4 @@ public class FirstTeleOp extends LinearOpMode {
         TODO MAKE THIS SO IT INITIALIZES ALL MOTORS AND THE IMU, THEN CALL METHOD IN INIT
         */
     }
-
-    private void simpleDrive() {
-        double gamePadForward, gamePadLeft, gamePadTurn;
-        gamePadForward = -gamepad1.left_stick_y;
-        gamePadLeft = -gamepad1.left_stick_x;
-        gamePadTurn = -gamepad1.right_stick_x;
-
-        Pose2d adjustedGamePadInputs = adjustGamePadInputs(
-                new Pose2d(gamePadForward, gamePadLeft, gamePadTurn)
-        );
-        gamePadForward = adjustedGamePadInputs.getX();
-        gamePadLeft = adjustedGamePadInputs.getY();
-        gamePadTurn = adjustedGamePadInputs.getHeading();
-
-        if (isFastSpeedMode) {
-            setNormalizedDrive(
-                    new Pose2d(
-                            gamePadForward * FAST_SPEED_MULTIPLIER * FORWARD_SCALAR,
-                            gamePadLeft * FAST_SPEED_MULTIPLIER,
-                            gamePadTurn * FAST_TURN_MULTIPLIER
-                    )
-            );
-        } else {
-            setNormalizedDrive(
-                    new Pose2d(gamePadForward * SLOW_SPEED_MULTIPLIER * FORWARD_SCALAR,
-                            gamePadLeft * SLOW_SPEED_MULTIPLIER,
-                            gamePadTurn * SLOW_TURN_MULTIPLIER
-                    )
-            );
-        }
-    }
-
-
-
 }
