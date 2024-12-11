@@ -29,4 +29,8 @@ public class IguanasaurusFunctions {
     boolean isPressingX = false;
     boolean isPressingY = false;
     boolean hasSample = false;
+
+    public double inchesToTicks(double inches) {
+
+    }
 }
