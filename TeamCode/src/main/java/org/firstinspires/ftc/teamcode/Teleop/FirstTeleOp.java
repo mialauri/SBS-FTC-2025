@@ -1,4 +1,6 @@
-package org.firstinspires.ftc.teamcode.Teleop;;
+package org.firstinspires.ftc.teamcode.Teleop;
+
+import com.google.ar.core.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -6,12 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Arm.SlideVerticalArm;
-import org.firstinspires.ftc.teamcode.Arm.TubeDriver;
-import org.firstinspires.ftc.teamcode.Utils.AdvancedPidController;
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import Utils.Chassis.ChassisDriver ;
+
 
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(group = "Teleop")
@@ -20,7 +17,7 @@ public class FirstTeleOp extends LinearOpMode {
     Servo inClaw, depClaw, inWrist, depWrist, transfer;
     ColorSensor transColor, inColor;
     IMU imu;
-    ChassisDriver chassisDriver;
+
     public static double IN_CLAW_CLOSE = 0.0;
     public static double IN_CLAW_OPEN = 1.0;
     public static double IN_WRIST_DEPOSIT = 0.0;
@@ -59,31 +56,34 @@ public class FirstTeleOp extends LinearOpMode {
         slideVerticalArm = new SlideVerticalArm(vertical1, vertical2);
         slideVerticalArm.resetPidValues();
     }
+
     VertArmStatus vertArmStatus = VertArmStatus.DOWN;
+
     private enum VertArmStatus {
         DOWN, UP_BAR, UP_BASKET
     }
+
     boolean InClawOpen = true;
     boolean hasSample = false;
     boolean isFastSpeedMode = true;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        lb       = hardwareMap.get(DcMotorEx .class, "lb");
-        lf       = hardwareMap.get(DcMotorEx.class, "lf");
-        rb       = hardwareMap.get(DcMotorEx.class, "rb");
-        rf       = hardwareMap.get(DcMotorEx.class, "rf");
+        lb = hardwareMap.get(DcMotorEx.class, "lb");
+        lf = hardwareMap.get(DcMotorEx.class, "lf");
+        rb = hardwareMap.get(DcMotorEx.class, "rb");
+        rf = hardwareMap.get(DcMotorEx.class, "rf");
         ChassisDriver.initializeMotors(lf, rf, lb, rb);
 
-        intake  = hardwareMap.get(DcMotorEx.class, "intake");
-        inClaw   = hardwareMap.get(Servo.class, "inClaw");
-        depClaw  = hardwareMap.get(Servo.class, "depClaw");
-        inWrist  = hardwareMap.get(Servo.class, "inWrist");
+        intake = hardwareMap.get(DcMotorEx.class, "intake");
+        inClaw = hardwareMap.get(Servo.class, "inClaw");
+        depClaw = hardwareMap.get(Servo.class, "depClaw");
+        inWrist = hardwareMap.get(Servo.class, "inWrist");
         depWrist = hardwareMap.get(Servo.class, "depWrist");
         transfer = hardwareMap.get(Servo.class, "transfer");
-        imu      = hardwareMap.get(IMU.class, "imu");
+        imu = hardwareMap.get(IMU.class, "imu");
 
-        vertical1  = hardwareMap.get(DcMotorEx.class, "vertical1");
+        vertical1 = hardwareMap.get(DcMotorEx.class, "vertical1");
         vertical2 = hardwareMap.get(DcMotorEx.class, "vertical2");
         TubeDriver.initRotationMotors(vertical1, vertical2);
 
@@ -101,30 +101,27 @@ public class FirstTeleOp extends LinearOpMode {
 
 
 
-
             //in claw
             if (gamepad1.x && !pressX && !hasSample) {
                 pressX = true;
-                if(inClaw.getPosition() == IN_CLAW_CLOSE){
+                if (inClaw.getPosition() == IN_CLAW_CLOSE) {
                     inClaw.setPosition(IN_CLAW_OPEN);
                 } else if (inClaw.getPosition() == IN_CLAW_OPEN) {
                     inClaw.setPosition(IN_CLAW_CLOSE);
                 }
-            }
-            else if (!gamepad1.x && pressX) {
+            } else if (!gamepad1.x && pressX) {
                 pressX = false;
             }
 
             //dep claw
             if (gamepad1.x && !pressX && hasSample) {
                 pressX = true;
-                if(depClaw.getPosition() == OUT_CLAW_CLOSE){
+                if (depClaw.getPosition() == OUT_CLAW_CLOSE) {
                     depClaw.setPosition(OUT_CLAW_OPEN);
                 } else if (depClaw.getPosition() == OUT_CLAW_OPEN) {
                     depClaw.setPosition(OUT_CLAW_CLOSE);
                 }
-            }
-            else if (!gamepad1.x && pressX) {
+            } else if (!gamepad1.x && pressX) {
                 pressX = false;
             }
 
@@ -132,13 +129,12 @@ public class FirstTeleOp extends LinearOpMode {
             if (gamepad1.b && !pressB && !hasSample) {
                 pressB = true;
                 hasSample = true;
-                if(inWrist.getPosition() == IN_WRIST_DEPOSIT){
+                if (inWrist.getPosition() == IN_WRIST_DEPOSIT) {
                     inWrist.setPosition(IN_WRIST_INTAKE);
                 } else if (inWrist.getPosition() == IN_WRIST_INTAKE) {
                     inWrist.setPosition(IN_WRIST_DEPOSIT);
                 }
-            }
-            else if (!gamepad1.b && pressB) {
+            } else if (!gamepad1.b && pressB) {
                 pressB = false;
             }
 
@@ -146,13 +142,12 @@ public class FirstTeleOp extends LinearOpMode {
             if (gamepad1.b && !pressB && hasSample) {
                 pressB = true;
                 hasSample = false;
-                if(depWrist.getPosition() == OUT_WRIST_SCORE){
+                if (depWrist.getPosition() == OUT_WRIST_SCORE) {
                     depWrist.setPosition(OUT_WRIST_RECEIVE);
                 } else if (depWrist.getPosition() == OUT_WRIST_RECEIVE) {
                     depWrist.setPosition(OUT_WRIST_SCORE);
                 }
-            }
-            else if (!gamepad1.b && pressB) {
+            } else if (!gamepad1.b && pressB) {
                 pressX = false;
             }
 
@@ -170,8 +165,7 @@ public class FirstTeleOp extends LinearOpMode {
                         slideVerticalArm.setToAngleDegrees(DOWN);
                         vertArmStatus = VertArmStatus.DOWN;
                 }
-            }
-            else if (!gamepad1.y && pressY) {
+            } else if (!gamepad1.y && pressY) {
                 pressY = false;
             }
 
@@ -189,8 +183,7 @@ public class FirstTeleOp extends LinearOpMode {
                         slideVerticalArm.setToAngleDegrees(UP_BASKET);
                         vertArmStatus = VertArmStatus.UP_BASKET;
                 }
-            }
-            else if (!gamepad1.a && pressA) {
+            } else if (!gamepad1.a && pressA) {
                 pressA = false;
             }
 
@@ -200,8 +193,7 @@ public class FirstTeleOp extends LinearOpMode {
             if (gamepad1.right_trigger > 1) {//TODO ADD CONDITIONAL WITH MAX INCHES
                 TARGET_INCHES = 0;
                 intake.setPower(getArmPower());
-            }
-            else {
+            } else {
                 intake.setPower(0);
             }
 
@@ -209,8 +201,7 @@ public class FirstTeleOp extends LinearOpMode {
             if (gamepad1.left_trigger > 1) {
                 TARGET_INCHES = 12; //TODO CHECK WHAT THE MAX REACH IS IN INCHES
                 intake.setPower(getArmPower());
-            }
-            else {
+            } else {
                 intake.setPower(0);
             }
 
@@ -222,6 +213,7 @@ public class FirstTeleOp extends LinearOpMode {
             chassisDriver.setNormalizedDrive(new Pose2d(forwardPower, leftPower, rotatePower));
         }
     }
+
     public double getArmPower() {
         double pos = intake.getCurrentPosition();
         double angle_deg = (360 / 751.8) * pos; //TODO CHECK TICKS PER REV ON MOTOR
@@ -232,5 +224,36 @@ public class FirstTeleOp extends LinearOpMode {
         /*
         TODO MAKE THIS SO IT INITIALIZES ALL MOTORS AND THE IMU, THEN CALL METHOD IN INIT
         */
+    }
+
+    private void simpleDrive() {
+        double gamePadForward, gamePadLeft, gamePadTurn;
+        gamePadForward = -gamepad1.left_stick_y;
+        gamePadLeft = -gamepad1.left_stick_x;
+        gamePadTurn = -gamepad1.right_stick_x;
+
+        Pose2d adjustedGamePadInputs = adjustGamePadInputs(
+                new Pose2d(gamePadForward, gamePadLeft, gamePadTurn)
+        );
+        gamePadForward = adjustedGamePadInputs.getX();
+        gamePadLeft = adjustedGamePadInputs.getY();
+        gamePadTurn = adjustedGamePadInputs.getHeading();
+
+        if (isFastSpeedMode) {
+            setNormalizedDrive(
+                    new Pose2d(
+                            gamePadForward * FAST_SPEED_MULTIPLIER * FORWARD_SCALAR,
+                            gamePadLeft * FAST_SPEED_MULTIPLIER,
+                            gamePadTurn * FAST_TURN_MULTIPLIER
+                    )
+            );
+        } else {
+            setNormalizedDrive(
+                    new Pose2d(gamePadForward * SLOW_SPEED_MULTIPLIER * FORWARD_SCALAR,
+                            gamePadLeft * SLOW_SPEED_MULTIPLIER,
+                            gamePadTurn * SLOW_TURN_MULTIPLIER
+                    )
+            );
+        }
     }
 }
