@@ -61,14 +61,14 @@ public class ChassisDriver {
 
     DepthCamera frontDepthCamera;
     DepthCamera backDepthCamera;
-    org.firstinspires.ftc.teamcode.Utils.Chassis.FieldOrientedDriver fieldOrientedDriver;
+    FieldOrientedDriver fieldOrientedDriver;
 
     public ChassisDriver(IMU imu) {
         this.imu = imu;
 
         resetPIDs();
 
-        fieldOrientedDriver = new org.firstinspires.ftc.teamcode.Utils.Chassis.FieldOrientedDriver(imu);
+        fieldOrientedDriver = new FieldOrientedDriver(imu);
     }
 
     public ChassisDriver(DepthCamera backDepthCamera, IMU imu) {
@@ -77,7 +77,7 @@ public class ChassisDriver {
 
         resetPIDs();
 
-        fieldOrientedDriver = new org.firstinspires.ftc.teamcode.Utils.Chassis.FieldOrientedDriver(imu);
+        fieldOrientedDriver = new FieldOrientedDriver(imu);
     }
 
     public ChassisDriver(DepthCamera frontDepthCamera, DepthCamera backDepthCamera, IMU imu) {
@@ -87,7 +87,7 @@ public class ChassisDriver {
 
         resetPIDs();
 
-        fieldOrientedDriver = new org.firstinspires.ftc.teamcode.Utils.Chassis.FieldOrientedDriver(imu);
+        fieldOrientedDriver = new FieldOrientedDriver(imu);
     }
 
     public static void initializeMotors(DcMotorEx lf, DcMotorEx rf, DcMotorEx lb, DcMotorEx rb) {

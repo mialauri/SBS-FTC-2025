@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Utils.Chassis;
+package Utils.Chassis;
 
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.GEAR_RATIO;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.TICKS_PER_REV;
@@ -10,6 +10,8 @@ import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveOdometry;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+
+import org.firstinspires.ftc.teamcode.Utils.ChassisDriver;
 
 public class MecanumWheelOdometry {
     private DcMotorEx lf;
@@ -36,7 +38,7 @@ public class MecanumWheelOdometry {
         this.rb = rb;
         this.imu = imu;
 
-        wheelOdometry = new MecanumDriveOdometry(KodiakDriver.KINEMATICS, new Rotation2d(), new Pose2d());
+        wheelOdometry = new MecanumDriveOdometry(org.firstinspires.ftc.teamcode.Utils.Chassis.KodiakDriver.KINEMATICS, new Rotation2d(), new Pose2d());
 
         ChassisDriver.resetWheelEncoders(lf, rf, lb, rb);
     }
@@ -71,7 +73,7 @@ public class MecanumWheelOdometry {
 
         double vF = (vlf + vrf + vlb + vrb) / 4;
         double vS = (-vlf + vrf + vlb - vrb) / 4;
-        double w = (-vlf + vrf - vlb + vrb) / (4 * 2 * KodiakDriver.trackDiameter);
+        double w = (-vlf + vrf - vlb + vrb) / (4 * 2 * org.firstinspires.ftc.teamcode.Utils.Chassis.KodiakDriver.trackDiameter);
         return new com.acmerobotics.roadrunner.geometry.Pose2d(vF, vS, w);
     }
 
