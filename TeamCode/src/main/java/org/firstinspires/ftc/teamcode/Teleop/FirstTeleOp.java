@@ -98,7 +98,7 @@ public class FirstTeleOp extends LinearOpMode {
             telemetry.addData("Arm Status: ", vertArmStatus);
             telemetry.update();
 
-            simpleDrive();
+
 
 
 

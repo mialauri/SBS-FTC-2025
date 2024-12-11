@@ -235,7 +235,7 @@ public class AdvancedPidController {
      * @param setPoint The target value for the system. This will be stored for future calculations.
      * @return calculated output value for driving the system
      */
-    public double calculate(double input, double setPoint) {
+    public static double calculate(double input, double setPoint) {
         double pOutput;
         double iOutput;
         double dOutput;
