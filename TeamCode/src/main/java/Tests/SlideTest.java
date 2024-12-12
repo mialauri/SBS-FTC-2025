@@ -27,14 +27,17 @@ public class SlideTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            double diameterBig = 28.8; //mm
+            double diameterSmall = 7; //mm
+
             double speed = 0;
             boolean pressY = false;
             boolean pressA = false;
             boolean pressB = false;
             while (opModeIsActive()) {
                 pos = motor.getCurrentPosition();
-                double degrees = (360 / 751.8) * pos;
-                
+                double degrees = (360 / 751.8) * pos * (28.8/7) ;
+             
 
                 if (gamepad1.y && !pressY) { //if pressing b and var is false
                     speed += 0.1;
