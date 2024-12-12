@@ -67,8 +67,8 @@ SensorLimelightAprilTag extends LinearOpMode {
 
                 Pose3D botpose_mt2 = result.getBotpose_MT2();
                 if (botpose_mt2 != null) {
-                    double x =  39.37/(botpose_mt2.getPosition().x); //inches
-                    double y = (botpose_mt2.getPosition().y - 1.2) * 39.37; //inches
+                    double x =  (botpose_mt2.getPosition().x); //inches
+                    double y = (botpose_mt2.getPosition().y) ; //inches
                     double z = Math. pow((x*x + y*y), 0.5);
                     telemetry.addData("MT2 Location:", "(" + x + ", " + y + ", " + z +")");
                 }

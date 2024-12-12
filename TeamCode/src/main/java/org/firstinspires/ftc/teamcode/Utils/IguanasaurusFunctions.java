@@ -32,5 +32,6 @@ public class IguanasaurusFunctions {
 
     public double inchesToTicks(double inches) {
 
-    }
-}
+        return inches;
+    }}
+
