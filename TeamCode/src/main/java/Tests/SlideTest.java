@@ -38,7 +38,7 @@ public class SlideTest extends LinearOpMode {
             boolean pressB = false;
             while (opModeIsActive()) {
                 pos = motor.getCurrentPosition();
-                double degrees = (360 / 751.8) * pos * (28.8/7) ;
+                double degrees = (360 / 751.8) * pos * (28.8/7) * (6.28318/360);
              
 
                 if (gamepad1.y && !pressY) { //if pressing b and var is false
@@ -65,7 +65,7 @@ public class SlideTest extends LinearOpMode {
 
                 telemetry.addData("motor speed", speed);
                 telemetry.addData("Pos: ", pos);
-                telemetry.addData("Degrees: ", degrees);
+                telemetry.addData("Radians: ", degrees);
 
                 telemetry.update();
             }
