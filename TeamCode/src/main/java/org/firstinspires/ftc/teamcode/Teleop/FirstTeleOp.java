@@ -39,6 +39,8 @@ public class FirstTeleOp extends LinearOpMode {
     public static double FAST_TURN_MULTIPLIER = 4;
     public static double SLOW_SPEED_MULTIPLIER = 0.8;
     public static double SLOW_TURN_MULTIPLIER = 1.5;
+    public static double SPEED_MULT = 2;
+    public static double TURN_MULT = 4;
     public static double FORWARD_SCALAR = 1;
 
     boolean pressA = false;
@@ -226,9 +228,24 @@ public class FirstTeleOp extends LinearOpMode {
             }
 
             //Chassis Drive
-            double forwardPower = -gamepad1.left_stick_y;
-            double leftPower = -gamepad1.left_stick_x;
-            double rotatePower = -gamepad1.right_stick_x;
+
+            if (gamepad1.left_bumper && !pressLBUMBPER && !isFastSpeedMode) {
+                pressLBUMBPER = true;
+                isFastSpeedMode = true;
+                SPEED_MULT = SLOW_SPEED_MULTIPLIER;
+                TURN_MULT = SLOW_TURN_MULTIPLIER;
+            } else if (gamepad1.left_bumper && !pressLBUMBPER && isFastSpeedMode) {
+                pressLBUMBPER = true;
+                isFastSpeedMode = false;
+                SPEED_MULT = FAST_SPEED_MULTIPLIER;
+                TURN_MULT = FAST_TURN_MULTIPLIER;
+            } else if (!gamepad1.left_bumper && pressRBUMPER) {
+                pressLBUMBPER = false;
+            }
+
+            double forwardPower = -gamepad1.left_stick_y * SPEED_MULT;
+            double leftPower = -gamepad1.left_stick_x * TURN_MULT;
+            double rotatePower = -gamepad1.right_stick_x * TURN_MULT;
 
             chassisDriver.setNormalizedDrive(new Pose2d(forwardPower, leftPower, rotatePower));
         }
