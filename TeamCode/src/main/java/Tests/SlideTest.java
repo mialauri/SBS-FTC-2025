@@ -7,8 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-// og diameter = 28.8 mm
-
 @TeleOp(name = "SlideTest")
 public class SlideTest extends LinearOpMode {
     DcMotorEx motor;
