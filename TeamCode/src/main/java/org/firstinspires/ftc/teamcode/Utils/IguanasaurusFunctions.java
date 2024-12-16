@@ -34,3 +34,6 @@ public class IguanasaurusFunctions {
 
     }
 }
+        return inches;
+    }}
+
