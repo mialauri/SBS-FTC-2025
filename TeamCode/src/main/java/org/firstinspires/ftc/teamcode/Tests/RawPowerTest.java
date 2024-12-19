@@ -25,8 +25,8 @@ public class RawPowerTest extends LinearOpMode{
         while (opModeIsActive()) {
 
 
-            motorDriver.setMotorPower(-gamepad1.left_stick_y);
-            telemetry.addData("Power", -gamepad1.left_stick_y);
+            motorDriver.setMotorPower(gamepad1.left_stick_y);
+            telemetry.addData("Power", gamepad1.left_stick_y);
             telemetry.update();
         }
     }
