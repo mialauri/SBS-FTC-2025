@@ -27,65 +27,88 @@ public class SlideTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            double diameterBig = 28.8; //mm
-            double diameterSmall = 7; //mm
+            //double diameterBig = 28.8; //mm
+            //double diameterSmall = 7; //mm
 
             double speed = 0;
+            double speedAdd = 0;
             boolean pressY = false;
             boolean pressA = false;
             boolean pressB = false;
-            double joystick = gamepad1.right_stick_y; //joystick
+            boolean pressX = false;
             double deg = 0;
+            int targetUpPosition = 200;
+            int targetDownPosition = -20;
+            double power = gamepad1.right_stick_y;
+            double stopSpeedMax = 0.9;
+
+
             while (opModeIsActive()) {
                 pos = motor.getCurrentPosition();
                 deg = (360 / 751.8) * pos * (28.8 / 7);
-
                 speed = 0;
 
-                //motor.setPower(joystick);
-
-                if (gamepad1.y && !pressY) { //if pressing b and var is false
+               /* if (gamepad1.b && !pressB) { //if pressing b and var is false
+                    pressB = true;
                     speed += 0.1;
+                } else if (!gamepad1.b && pressB) {
+                    pressB = false;
+                }
+
+                if (gamepad1.x && !pressX) {
+                    pressX = true;
+                    speed -= 0.1;
+                } else if (!gamepad1.x && pressX) {
+                    pressX = false;
+                }
+
+                */
+
+             /*   if(speed >= 0.9 || speed <= -0.3 ){
+                    motor.setPower(0);
+                    motor.setMode(DcMotor.RunMode.RESET_ENCODERS);
+                }
+
+              */
+
+                if (gamepad1.y && pos < targetUpPosition && !pressY) {//if y is pressed slide go up
+                    speed = 0.5;
+                    speed -= power;
                     pressY = true;
                     motor.setPower(speed);
-                } else if (!gamepad1.y && pressY) {
+                    motor.setTargetPosition(targetUpPosition);
+                } else if (pos >= targetUpPosition && pressA) {
+                    motor.setPower(0);
+                    motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     pressY = false;
                 }
 
 
-                if (gamepad1.a && !pressA) {
-                    speed -= 0.1;
+                if (gamepad1.a && pos > targetDownPosition && !pressA) {//if a is pressed slide go down
+                    speed = -0.5;
+                    speed -= power;
                     pressA = true;
                     motor.setPower(speed);
-                } else if (!gamepad1.a && pressA) {
+                } else if (pos <= targetDownPosition && pressA) {
+                    motor.setPower(0);
+                    motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     pressA = false;
                 }
-
-
-
-                if (pos > 2000) {
+                if (gamepad1.b && !pressB) {
                     motor.setPower(0);
-                    pos = 1999;
-                }
-                if (pos < -20) {
-                    motor.setPower(0);
-                    pos = 0;
-                }
-
-
-                if (gamepad1.b && !pressB) { //if pressing b and var is false
-                    motor.setPower(0);
-                }
+                    pressA = true;}
 
                 telemetry.addData("motor speed", speed);
                 telemetry.addData("Pos: ", pos);
                 telemetry.addData("Degrees: ", deg);
+
 
                 telemetry.update();
             }
         }
     }
 }
+
 
 
 
