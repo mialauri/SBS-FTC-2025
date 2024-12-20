@@ -34,7 +34,7 @@ public class MotorTest extends LinearOpMode {
                 pos = motor.getCurrentPosition();
                 double degrees = (360 / 751.8) * pos;
                 if (gamepad1.y && !pressY) { //if pressing b and var is false
-                    speed += 0.1;
+                    speed += 0.001;
                     motor.setPower(speed);
                     pressY = true;
                 } else if (!gamepad1.y && pressY) {
@@ -42,7 +42,7 @@ public class MotorTest extends LinearOpMode {
                 }
 
                 if (gamepad1.a && !pressA) {
-                    speed -= 0.1;
+                    speed -= 0.001;
                     motor.setPower(speed);
                     pressA = true;
                 } else if (!gamepad1.a && pressA) {
