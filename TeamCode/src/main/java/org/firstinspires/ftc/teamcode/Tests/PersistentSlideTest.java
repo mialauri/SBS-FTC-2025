@@ -7,7 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import com.acmerobotics.dashboard.config.Config;
+
 @TeleOp(name = "PersistentSlideTest")
+@Config
 public class PersistentSlideTest extends LinearOpMode {
     DcMotorEx motor;
     double pos;
@@ -45,59 +48,43 @@ public class PersistentSlideTest extends LinearOpMode {
             double stopSpeedMax = 0.9;
 
 
-            while (opModeIsActive()) {
+            while (opModeIsActive()) {//TODO REVERSE EVERYTHING POS SET OPPOSITE AND TELEMETRY AND BUTTONS SHOW OPPOSITE
                 pos = motor.getCurrentPosition();
                 deg = (360 / 751.8) * pos * (28.8 / 7);
-                SPEED= 0;
-                motor.setPower(gamepad1.left_stick_y);
 
-                if (gamepad1.y && pos < TARGETUPPOSITION && !pressY) {//if y is pressed slide go up
-                    SPEED= 0.5;
-                    SPEED-= power;
-                    pressY = true;
-                    motor.setPower(SPEED);
-                    motor.setTargetPosition(TARGETUPPOSITION);
-                } else if (pos >= TARGETUPPOSITION && pressA) {
-                    motor.setPower(0);
-                    motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    pressY = false;
-                }
 
                 while (gamepad1.y && pos < TARGETUPPOSITION) {
-                    motor.setPower(SPEED);
                     motor.setTargetPosition(TARGETUPPOSITION);
+                    motor.setPower(SPEED);
+                    pos = motor.getCurrentPosition();
                 }
                 motor.setPower(0);
-                motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
                 while (gamepad1.a && pos > TARGETDOWNPOSITION) {
-                    motor.setPower(-SPEED);
                     motor.setTargetPosition(TARGETDOWNPOSITION);
+                    motor.setPower(-SPEED);
+                    pos = motor.getCurrentPosition();
                 }
                 motor.setPower(0);
-                motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
-                if(gamepad1.dpad_down && SPEED> 1 && !pressDpadDown) {
+                if(gamepad1.dpad_down && SPEED > 0 && !pressDpadDown) {
                     pressDpadDown = true;
                     SPEED-=0.1;
                 } else if (!gamepad1.dpad_down && pressDpadDown) {
                     pressDpadDown = false;
                 }
 
-                if(gamepad1.dpad_up && SPEED< 1 && !pressDpadUp) {
+                if(gamepad1.dpad_up && SPEED < 1 && !pressDpadUp) {
                     pressDpadUp = true;
                     SPEED+=0.1;
                 } else if (!gamepad1.dpad_up && pressDpadUp) {
                     pressDpadUp = false;
                 }
 
-                telemetry.addData("motor SPEED", SPEED);
+                telemetry.addData("motor SPEED: ", SPEED);
                 telemetry.addData("Pos: ", pos);
                 telemetry.addData("Degrees: ", deg);
-
-
                 telemetry.update();
             }
         }
